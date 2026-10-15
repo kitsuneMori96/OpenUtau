@@ -746,7 +746,7 @@ namespace OpenUtau.App.Views {
                 UpdateCurveExp(pointer, point, masked: true);
             } else if (descriptor.type != UExpressionType.Curve) {
                 UpdatePhonemeExp(pointer, point);
-            } else if (vm.CurveViewModel.PhonemeSnapMode) {
+            } else if (vm.CurveViewModel.CurveTool == CurveTools.CurvePhonemeSnapTool) {
                 UpdatePhonemeSnappedCurveExp(point);
             } else {
                 UpdateCurveExp(pointer, point);
@@ -962,7 +962,7 @@ namespace OpenUtau.App.Views {
             }
             if (descriptor.type != UExpressionType.Curve) {
                 ResetPhonemeExp(pointer, point);
-            } else if (vm.CurveViewModel.PhonemeSnapMode) {
+            } else if (vm.CurveViewModel.CurveTool == CurveTools.CurvePhonemeSnapTool) {
                 ResetPhonemeSnappedCurveExp(point);
             } else {
                 ResetCurveExp(pointer, point);

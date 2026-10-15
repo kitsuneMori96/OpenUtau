@@ -665,9 +665,9 @@
                           PointerPressed="ExpCanvasPointerPressed"
                           PointerMoved="ExpCanvasPointerMoved"
                           PointerReleased="ExpCanvasPointerReleased"/>
-      <StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top"
-                  IsVisible="{Binding NotesViewModel.ShowCurveToolbar, Mode=OneWay}">
-      <ListBox Classes="toolbar" Padding="2"
+      <ListBox Classes="toolbar" Grid.Row="5" Grid.Column="1" Padding="2"
+               HorizontalAlignment="Left" VerticalAlignment="Top"
+               IsVisible="{Binding NotesViewModel.ShowCurveToolbar, Mode=OneWay}"
                SelectedIndex="{Binding CurveViewModel.CurveToolIndex}">
         <ListBox.ItemsPanel>
             <ItemsPanelTemplate>
@@ -683,21 +683,9 @@
           <ListBoxItem Classes="toolbar horizontalStretchTool" ToolTip.Tip="{DynamicResource pianoroll.tool.curve.horizontalstretch}"/>
           <ListBoxItem Classes="toolbar verticalShiftTool" ToolTip.Tip="{DynamicResource pianoroll.tool.curve.verticalshift}"/>
           <ListBoxItem Classes="toolbar horizontalShiftTool" ToolTip.Tip="{DynamicResource pianoroll.tool.curve.horizontalshift}"/>
+          <ListBoxItem Classes="toolbar phonemeSnapTool" ToolTip.Tip="{DynamicResource pianoroll.tool.curve.phonemesnap}"/>
         </ListBox.Items>
       </ListBox>
-      <ToggleButton Classes="toolbar" Margin="4,0,0,0" Padding="1" Height="20" Width="20"
-                    IsChecked="{Binding CurveViewModel.PhonemeSnapMode}"
-                    ToolTip.Tip="{DynamicResource pianoroll.tool.curve.phonemesnap}">
-        <Grid Width="18" Height="18">
-          <Path Stroke="{DynamicResource SystemControlForegroundBaseHighBrush}" StrokeThickness="1.5"
-                HorizontalAlignment="Center" VerticalAlignment="Center"
-                Data="M 0,13 L 5,13 L 5,7 L 10,7 L 10,10 L 15,10"/>
-          <Path Stroke="{DynamicResource SystemControlForegroundBaseHighBrush}" StrokeThickness="1" Opacity="0.6"
-                HorizontalAlignment="Center" VerticalAlignment="Bottom"
-                Data="M 0,15 L 0,17 M 5,15 L 5,17 M 10,15 L 10,17 M 15,15 L 15,17"/>
-        </Grid>
-      </ToggleButton>
-      </StackPanel>
       <TextBlock Classes="tips" Grid.Row="5" Grid.Column="1"
                  IsHitTestVisible="False" VerticalAlignment="Bottom" Margin="10,5"
                  IsVisible="{Binding NotesViewModel.PrimaryKeyNotSupported}"

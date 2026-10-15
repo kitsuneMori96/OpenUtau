@@ -134,6 +134,9 @@
   <Style Selector="ListBoxItem.horizontalShiftTool /template/ Path#PART_ToolIcon">
     <Setter Property="Data" Value="M -0.33 12.66 L 2.85 15.84 C 3.24 16.23 3.88 16.23 4.27 15.84 C 4.66 15.45 4.66 14.82 4.27 14.43 L 2.8 12.96 H 12.05 H 21.3 L 19.83 14.43 C 19.44 14.82 19.44 15.45 19.83 15.84 C 20.22 16.23 20.86 16.23 21.25 15.84 L 24.43 12.66 C 24.93 12.16 24.6 11.41 24.43 11.25 L 21.24 8.07 C 20.85 7.68 20.21 7.68 19.82 8.07 C 19.43 8.46 19.43 9.09 19.82 9.48 L 21.29 10.95 H 12.04 H 2.79 L 4.27 9.48 C 4.66 9.09 4.66 8.46 4.27 8.07 C 3.88 7.68 3.24 7.68 2.85 8.07 L -0.33 11.25 C -0.82 11.74 -0.77 12.23 -0.33 12.66 Z" />
   </Style>
+  <Style Selector="ListBoxItem.phonemeSnapTool /template/ Path#PART_ToolIcon">
+    <Setter Property="Data" Value="M 2 17 L 8 17 L 8 10 L 14 10 L 14 4 L 22 4 L 22 7 L 17 7 L 17 13 L 11 13 L 11 20 L 2 20 Z" />
+  </Style>
   <Style Selector="ListBoxItem.penTool /template/ Path#PART_ToolIcon">
     <Setter Property="Data" Value="M14.06,9L15,9.94L5.92,19H5V18.08L14.06,9M17.66,3C17.41,3 17.15,3.1 16.96,3.29L15.13,5.12L18.88,8.87L20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18.17,3.09 17.92,3 17.66,3M14.06,6.19L3,17.25V21H6.75L17.81,9.94L14.06,6.19Z" />
   </Style>

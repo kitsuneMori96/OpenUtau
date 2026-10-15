@@ -697,9 +697,9 @@ Warning: this option removes custom presets.</system:String>
   <system:String x:Key="pianoroll.tool.curve.horizontalshift">Horizontal Shift Tool
     Left click to move the curve horizontally
     Right click to reset</system:String>
-  <system:String x:Key="pianoroll.tool.curve.phonemesnap">Phoneme Snap Mode
-    When on, curve expressions are edited per phoneme:
-    each phoneme gets one flat value clipped to its range</system:String>
+  <system:String x:Key="pianoroll.tool.curve.phonemesnap">Phoneme Snap Tool
+    Left click to draw, each phoneme gets one flat value
+    Right click to reset phoneme segments</system:String>
   <system:String x:Key="pianoroll.tool.drawpitch">Draw Pitch Tool (Shift + 1)
     Left click to draw
     Right click to reset

@@ -1214,6 +1214,10 @@ namespace OpenUtau.App.Controls {
                         case CurveTools.CurveHorizontalShiftTool:
                             editState = new CurveHorizontalShiftState(control, ViewModel, this, descriptor);
                             break;
+                        case CurveTools.CurvePhonemeSnapTool:
+                            ViewModel.CurveViewModel.ClearSelect();
+                            editState = new ExpSetValueState(control, ViewModel, this, descriptor);
+                            break;
                         default:
                             ViewModel.CurveViewModel.ClearSelect();
                             break;
@@ -1248,7 +1252,7 @@ namespace OpenUtau.App.Controls {
             }
             if (editState != null) {
                 editState.ctrlShiftHeld = ViewModel.CurveViewModel.CurveTool == CurveTools.CurveLineTool;
-                editState.shiftHeld = (args.KeyModifiers == KeyModifiers.Shift && (ViewModel.CurveViewModel.CurveTool == CurveTools.CurveLineTool || ViewModel.CurveViewModel.CurveTool == CurveTools.CurvePenTool));
+                editState.shiftHeld = (args.KeyModifiers == KeyModifiers.Shift && (ViewModel.CurveViewModel.CurveTool == CurveTools.CurveLineTool || ViewModel.CurveViewModel.CurveTool == CurveTools.CurvePenTool || ViewModel.CurveViewModel.CurveTool == CurveTools.CurvePhonemeSnapTool));
                 UpdateEditState(args, control, point);
             } else {
                 Cursor = null;
