@@ -51,6 +51,7 @@ namespace OpenUtau.App.Views {
         public readonly PianoRollViewModel vm;
         public Point startPoint;
         public IValueTip valueTip;
+        protected IPointer? activePointer;
         protected virtual bool ShowValueTip => true;
         protected virtual string? commandNameKey => null;
         /// <summary>
@@ -72,6 +73,7 @@ namespace OpenUtau.App.Views {
             this.valueTip = valueTip;
         }
         public virtual void Begin(IPointer pointer, Point point) {
+            activePointer = pointer;
             pointer.Capture(control);
             startPoint = point;
             DocManager.Inst.StartUndoGroup(commandNameKey);
@@ -87,6 +89,22 @@ namespace OpenUtau.App.Views {
             }
         }
         public virtual void Update(IPointer pointer, Point point) { }
+        /// <summary>
+        /// Ends the interaction when it can no longer continue normally, e.g. the
+        /// piano roll got hidden mid-drag. Runs the state's own End so all cleanup
+        /// (undo group, value tip, custom visuals) happens, but with the start
+        /// point so no further data change is committed.
+        /// </summary>
+        public void Abort() {
+            if (activePointer != null) {
+                End(activePointer, startPoint);
+            } else {
+                DocManager.Inst.EndUndoGroup();
+                if (ShowValueTip) {
+                    valueTip.HideValueTip();
+                }
+            }
+        }
         public static void Swap<T>(ref T a, ref T b) {
             T temp = a;
             a = b;

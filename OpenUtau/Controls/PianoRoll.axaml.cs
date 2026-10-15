@@ -73,6 +73,23 @@ namespace OpenUtau.App.Controls {
             SetPenToolIcon();
             penTool.AddHandler(PointerPressedEvent, OnToolButtonPointerPressed, RoutingStrategies.Tunnel | RoutingStrategies.Bubble, true);
             this.LayoutUpdated += PianoRollLayoutUpdated;
+            // Hiding the piano roll collapses its row to near-zero height. Abort any
+            // interaction still in flight, or its pointer capture and value tip leak
+            // into the main track view.
+            this.GetObservable(BoundsProperty).Subscribe(bounds => {
+                if (bounds.Height < 1) {
+                    AbortActiveEditState();
+                }
+            });
+        }
+
+        private void AbortActiveEditState() {
+            if (editState == null) {
+                return;
+            }
+            editState.Abort();
+            editState = null;
+            Cursor = null;
         }
 
         private void PianoRollLayoutUpdated(object? sender, EventArgs e) {
