@@ -227,7 +227,7 @@ namespace OpenUtau.App.ViewModels {
                 this.Part = part as UVoicePart;
                 var track = DocManager.Inst.Project.tracks[part.trackNo];
                 foreach (var descriptor in track.GetSupportedExps(DocManager.Inst.Project)) {
-                    if (descriptor.type is UExpressionType.Numerical or UExpressionType.Options) {
+                    if (descriptor.type is UExpressionType.Numerical or UExpressionType.Options or UExpressionType.Curve) {
                         var viewModel = new NotePropertyExpViewModel(descriptor, this);
                         if (descriptor.abbr == Ustx.CLR) {
                             if (track.VoiceColorExp != null && track.VoiceColorExp.options.Length > 0) {
@@ -313,6 +313,20 @@ namespace OpenUtau.App.ViewModels {
 
                     foreach (NotePropertyExpViewModel exp in Expressions) {
                         exp.IsNoteSelected = true;
+                        if (exp.IsCurve) {
+                            // Phonemized reading of a curve expression: the value the curve takes
+                            // at the first phoneme of the focused note.
+                            var curve = Part?.curves.FirstOrDefault(c => c.abbr == exp.abbr);
+                            float curveValue = exp.defaultValue;
+                            if (Part != null && curve != null) {
+                                var firstPhoneme = Part.phonemes
+                                    .FirstOrDefault(p => !p.Error && p.Parent == note);
+                                curveValue = curve.Sample(firstPhoneme?.position ?? note.position);
+                            }
+                            exp.Value = curveValue;
+                            exp.HasValue = curveValue != exp.defaultValue;
+                            continue;
+                        }
                         var phonemeExpression = note.phonemeExpressions.FirstOrDefault(e => e.abbr == exp.abbr && e.index == 0);
                         if (phonemeExpression != null) {
                             if (exp.IsNumerical) {
@@ -689,6 +703,47 @@ namespace OpenUtau.App.ViewModels {
                 DocManager.Inst.ExecuteCmd(new SetNotesSameExpressionCommand(DocManager.Inst.Project, track, Part, selectedNotes, abbr, value));
             }
         }
+        // Phonemized editing of curve expressions: write one flat segment per phoneme of the
+        // selected notes into the part curve, instead of per-phoneme expression storage.
+        public void SetCurveExpressionsChanges(string abbr, float? value) {
+            if (AllowNoteEdit && Part != null && selectedNotes.Count > 0) {
+                var project = DocManager.Inst.Project;
+                var track = project.tracks[Part.trackNo];
+                if (!track.TryGetExpDescriptor(project, abbr, out var descriptor) ||
+                    descriptor.type != UExpressionType.Curve) {
+                    return;
+                }
+                if (value.HasValue && value.Value == descriptor.CustomDefaultValue) {
+                    value = null;
+                }
+                var curve = Part.curves.FirstOrDefault(c => c.abbr == abbr);
+                var oldXs = curve?.xs.ToArray() ?? Array.Empty<int>();
+                var oldYs = curve?.ys.ToArray() ?? Array.Empty<int>();
+                var xs = oldXs;
+                var ys = oldYs;
+                foreach (var phoneme in Part.phonemes) {
+                    if (phoneme.Error || phoneme.Parent == null || !selectedNotes.Contains(phoneme.Parent)) {
+                        continue;
+                    }
+                    int start = phoneme.position;
+                    int end = phoneme.End;
+                    if (end <= start) {
+                        continue;
+                    }
+                    var points = value.HasValue
+                        ? new[] {
+                            (start, (int)Math.Round(Math.Clamp(value.Value, descriptor.min, descriptor.max))),
+                            (end, (int)Math.Round(Math.Clamp(value.Value, descriptor.min, descriptor.max)))
+                        }
+                        : Array.Empty<(int x, int y)>();
+                    (xs, ys) = UCurve.ReplaceRange(xs, ys, start, end, points, descriptor);
+                }
+                if (!xs.SequenceEqual(oldXs) || !ys.SequenceEqual(oldYs)) {
+                    DocManager.Inst.ExecuteCmd(new MergedSetCurveCommand(project, Part, abbr, oldXs, oldYs, xs, ys));
+                    AttachExpressions();
+                }
+            }
+        }
         public void SetOptionalExpressionsChanges(string abbr, int? value) {
             if (!NoteLoading && Part != null && selectedNotes.Count > 0) {
                 var track = DocManager.Inst.Project.tracks[Part.trackNo];
@@ -749,6 +804,7 @@ namespace OpenUtau.App.ViewModels {
         public string Name { get; set; }
         public bool IsNumerical { get; set; } = false;
         public bool IsOptions { get; set; } = false;
+        public bool IsCurve { get; set; } = false;
         public float Min { get; set; }
         public float Max { get; set; }
         public ObservableCollection<string> Options { get; set; } = new ObservableCollection<string>();
@@ -779,6 +835,14 @@ namespace OpenUtau.App.ViewModels {
                     Options.Add(opt);
                 }
                 SelectedOption = (int)defaultValue;
+            } else if (descriptor.type == UExpressionType.Curve) {
+                IsCurve = true;
+                // Reuses the numerical editor (textbox + slider); commits go through
+                // SetCurveExpressionsChanges to write phoneme-flat curve segments.
+                IsNumerical = true;
+                Max = descriptor.max;
+                Min = descriptor.min;
+                Value = defaultValue;
             }
 
             parentViewmodel = parent;
@@ -808,7 +872,11 @@ namespace OpenUtau.App.ViewModels {
                 }
                 value = f;
             }
-            parentViewmodel.SetNumericalExpressionsChanges(abbr, value);
+            if (IsCurve) {
+                parentViewmodel.SetCurveExpressionsChanges(abbr, value);
+            } else {
+                parentViewmodel.SetNumericalExpressionsChanges(abbr, value);
+            }
             this.RaisePropertyChanged(nameof(Value));
         }
 

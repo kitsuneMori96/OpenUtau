@@ -746,6 +746,8 @@ namespace OpenUtau.App.Views {
                 UpdateCurveExp(pointer, point, masked: true);
             } else if (descriptor.type != UExpressionType.Curve) {
                 UpdatePhonemeExp(pointer, point);
+            } else if (vm.CurveViewModel.PhonemeSnapMode) {
+                UpdatePhonemeSnappedCurveExp(point);
             } else {
                 UpdateCurveExp(pointer, point);
             }
@@ -867,6 +869,55 @@ namespace OpenUtau.App.Views {
                 DocManager.Inst.ExecuteCmd(new SetCurveCommand(notesVm.Project, notesVm.Part, notesVm.PrimaryKey, x, (int)y, lastX, (int)lastY));
             }
         }
+        // Phonemized curve editing: each phoneme gets one flat segment clipped to its own range,
+        // so curve expressions can be edited per phoneme like the numerical expressions.
+        private void UpdatePhonemeSnappedCurveExp(Point point) {
+            if (descriptor == null) {
+                return;
+            }
+            var notesVm = vm.NotesViewModel;
+            if (notesVm.Part == null) {
+                return;
+            }
+            var p1 = lastPoint;
+            var p2 = point;
+            if (p1.X > p2.X) {
+                Swap(ref p1, ref p2);
+            }
+            var hits = notesVm.HitTest.HitTestExpRange(p1, p2);
+            if (hits.Count == 0) {
+                return;
+            }
+            if (shiftHeld != shiftWasHeld) {
+                startValue = descriptor.min + (descriptor.max - descriptor.min) * (1 - point.Y / control.Bounds.Height);
+                startValue = Math.Max(descriptor.min, Math.Min(descriptor.max, startValue));
+            }
+            var curve = notesVm.Part.curves.FirstOrDefault(c => c.abbr == descriptor.abbr);
+            var oldXs = curve?.xs.ToArray() ?? Array.Empty<int>();
+            var oldYs = curve?.ys.ToArray() ?? Array.Empty<int>();
+            var xs = oldXs;
+            var ys = oldYs;
+            foreach (var hit in hits) {
+                if (Preferences.Default.LockUnselectedNotesExpressions && notesVm.Selection.Count > 0 && !notesVm.Selection.Contains(hit.phoneme.Parent)) {
+                    continue;
+                }
+                int start = hit.phoneme.position;
+                int end = hit.phoneme.End;
+                if (end <= start) {
+                    continue;
+                }
+                double y = Lerp(p1, p2, notesVm.TickToneToPoint(start, 0).X);
+                double newValue = descriptor.min + (descriptor.max - descriptor.min) * (1 - y / control.Bounds.Height);
+                double finalValue = shiftHeld ? startValue : Math.Clamp(newValue, descriptor.min, descriptor.max);
+                int value = (int)Math.Round(Math.Clamp(finalValue, descriptor.min, descriptor.max));
+                (xs, ys) = UCurve.ReplaceRange(
+                    xs, ys, start, end, new[] { (start, value), (end, value) }, descriptor);
+            }
+            if (!xs.SequenceEqual(oldXs) || !ys.SequenceEqual(oldYs)) {
+                DocManager.Inst.ExecuteCmd(new MergedSetCurveCommand(
+                    notesVm.Project, notesVm.Part, descriptor.abbr, oldXs, oldYs, xs, ys));
+            }
+        }
     }
 
     class ExpResetValueState : NoteEditState {
@@ -911,6 +962,8 @@ namespace OpenUtau.App.Views {
             }
             if (descriptor.type != UExpressionType.Curve) {
                 ResetPhonemeExp(pointer, point);
+            } else if (vm.CurveViewModel.PhonemeSnapMode) {
+                ResetPhonemeSnappedCurveExp(point);
             } else {
                 ResetCurveExp(pointer, point);
             }
@@ -947,6 +1000,48 @@ namespace OpenUtau.App.Views {
                 DocManager.Inst.ExecuteCmd(new SetCurveCommand(
                     notesVm.Project, notesVm.Part, notesVm.PrimaryKey,
                     x, (int)descriptor.defaultValue, lastX, (int)descriptor.defaultValue));
+            }
+        }
+        private void ResetPhonemeSnappedCurveExp(Point point) {
+            if (descriptor == null) {
+                return;
+            }
+            var notesVm = vm.NotesViewModel;
+            if (notesVm.Part == null) {
+                return;
+            }
+            var p1 = lastPoint;
+            var p2 = point;
+            if (p1.X > p2.X) {
+                Swap(ref p1, ref p2);
+            }
+            var hits = notesVm.HitTest.HitTestExpRange(p1, p2);
+            if (hits.Count == 0) {
+                return;
+            }
+            var curve = notesVm.Part.curves.FirstOrDefault(c => c.abbr == descriptor.abbr);
+            if (curve == null) {
+                return;
+            }
+            var oldXs = curve.xs.ToArray();
+            var oldYs = curve.ys.ToArray();
+            var xs = oldXs;
+            var ys = oldYs;
+            foreach (var hit in hits) {
+                if (Preferences.Default.LockUnselectedNotesExpressions && notesVm.Selection.Count > 0 && !notesVm.Selection.Contains(hit.phoneme.Parent)) {
+                    continue;
+                }
+                int start = hit.phoneme.position;
+                int end = hit.phoneme.End;
+                if (end <= start) {
+                    continue;
+                }
+                (xs, ys) = UCurve.ReplaceRange(
+                    xs, ys, start, end, Array.Empty<(int x, int y)>(), descriptor);
+            }
+            if (!xs.SequenceEqual(oldXs) || !ys.SequenceEqual(oldYs)) {
+                DocManager.Inst.ExecuteCmd(new MergedSetCurveCommand(
+                    notesVm.Project, notesVm.Part, descriptor.abbr, oldXs, oldYs, xs, ys));
             }
         }
     }

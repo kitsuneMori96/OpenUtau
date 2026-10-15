@@ -31,6 +31,9 @@ namespace OpenUtau.ViewModels {
     public partial class CurveViewModel : ViewModelBase, ICmdSubscriber {
         [Reactive] public partial int CurveToolIndex { get; set; } = 1;
 
+        /// <summary>When on, curve expressions are edited per phoneme: each phoneme gets one flat segment.</summary>
+        [Reactive] public partial bool PhonemeSnapMode { get; set; } = false;
+
         public CurveTools CurveTool => (CurveTools)CurveToolIndex;
         public bool IsSelected(string abbr) => selection.HasValue(abbr);
         private CurveSelection selection = new CurveSelection();
