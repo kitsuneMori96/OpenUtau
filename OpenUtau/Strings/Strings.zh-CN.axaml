@@ -24,10 +24,13 @@
   <system:String x:Key="command.exp.edit">编辑表情</system:String>
   <system:String x:Key="command.exp.paste">粘贴表情曲线</system:String>
   <system:String x:Key="command.exp.reset">重置表情</system:String>
+  <system:String x:Key="command.expressiongraph.edit">编辑表情节点图</system:String>
+  <system:String x:Key="command.expressiongraph.import">导入表情节点图</system:String>
   <system:String x:Key="command.import.audio">导入音频</system:String>
   <system:String x:Key="command.import.track">导入音轨</system:String>
   <system:String x:Key="command.note.add">添加音符</system:String>
   <system:String x:Key="command.note.delete">删除音符</system:String>
+  <system:String x:Key="command.note.duplicate">复制音符</system:String>
   <system:String x:Key="command.note.edit">编辑音符</system:String>
   <system:String x:Key="command.note.lyric">编辑歌词</system:String>
   <system:String x:Key="command.note.move">移动音符</system:String>
@@ -250,12 +253,13 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="errors.failed.openfile">打开失败</system:String>
   <system:String x:Key="errors.failed.openlocation">打开位置失败</system:String>
   <system:String x:Key="errors.failed.opennewerproject">项目文件版本高于软件！请升级 OpenUtau！</system:String>
-  <!--<system:String x:Key="errors.failed.prerender">Failed to render in the background.</system:String>-->
+  <system:String x:Key="errors.failed.prerender">后台预渲染失败。</system:String>
   <system:String x:Key="errors.failed.render">渲染失败</system:String>
   <system:String x:Key="errors.failed.runeditingmacro">编辑宏失败</system:String>
   <system:String x:Key="errors.failed.save">保存失败</system:String>
   <system:String x:Key="errors.failed.savesingerconfig">保存歌手配置文件失败</system:String>
   <system:String x:Key="errors.failed.searchsinger">查找歌手失败</system:String>
+  <system:String x:Key="errors.failed.synth.consonantexceedscutoff">Oto 错误：辅音超出了 cutoff</system:String>
   <system:String x:Key="errors.failed.synth.cutoffbeforeoffset">Oto错误: 结束点在开始点之前</system:String>
   <system:String x:Key="errors.failed.synth.cutoffexceedduration">Oto错误: 结束点超出音频时长</system:String>
   <system:String x:Key="errors.failed.transcribe.rmvpe">加载 RMVPE ONNX 模型时出错。请从包管理器安装，或将 rmvpe.onnx 放置在 {0}</system:String>
@@ -263,8 +267,8 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="errors.install.cpp">请安装最新的 Visual C++ 运行环境。 https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170</system:String>
   <system:String x:Key="errors.lyrics.regex">正则表达式包含不支持的字符</system:String>
   <system:String x:Key="errors.lyrics.regexpreview">- 正则表达式错误 -</system:String>
-  <!--<system:String x:Key="errors.resampler.failed.message">Resampler failed to create output file(s). Resampler errors like this are often caused by oto.ini configuration issues. Consider generating a singer error report to check for such issues.</system:String>-->
-  <!--<system:String x:Key="errors.toast.details">(Click here for details)</system:String>-->
+  <system:String x:Key="errors.resampler.failed.message">重采样器未能生成输出文件。此类重采样器错误通常由 oto.ini 配置问题引起。建议生成歌手错误报告以检查此类问题。</system:String>
+  <system:String x:Key="errors.toast.details">（点击此处查看详情）</system:String>
 
   <system:String x:Key="exesetup.installing">即将安装“{0}”…</system:String>
   <system:String x:Key="exesetup.linux">在 Linux 上使用 exe 格式的 Resamplers 或 Wavtools: 
@@ -276,6 +280,75 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="exesetup.resampler">作为 resampler 安装</system:String>
   <system:String x:Key="exesetup.title">安装 exe 文件</system:String>
   <system:String x:Key="exesetup.wavtool">作为 wavtool 安装</system:String>
+  <system:String x:Key="expressiongraph.category.input">输入</system:String>
+  <system:String x:Key="expressiongraph.category.math">数学</system:String>
+  <system:String x:Key="expressiongraph.category.output">输出</system:String>
+  <system:String x:Key="expressiongraph.category.time">时间</system:String>
+  <system:String x:Key="expressiongraph.category.logic">逻辑</system:String>
+  <system:String x:Key="expressiongraph.node.time">工程时间</system:String>
+  <system:String x:Key="expressiongraph.node.smooth">平滑（起音/释音）</system:String>
+  <system:String x:Key="expressiongraph.node.random_range">随机范围</system:String>
+  <system:String x:Key="expressiongraph.node.slew">斜率限制器</system:String>
+  <system:String x:Key="expressiongraph.param.speed">速度（单位/秒）</system:String>
+  <system:String x:Key="expressiongraph.param.easing">缓动</system:String>
+  <system:String x:Key="expressiongraph.node.compare">比较</system:String>
+  <system:String x:Key="expressiongraph.node.and">与</system:String>
+  <system:String x:Key="expressiongraph.node.or">或</system:String>
+  <system:String x:Key="expressiongraph.node.not">非</system:String>
+  <system:String x:Key="expressiongraph.node.if_else">条件分支</system:String>
+  <system:String x:Key="expressiongraph.copy">副本</system:String>
+  <system:String x:Key="expressiongraph.cycle">该连线会形成环路。</system:String>
+  <system:String x:Key="expressiongraph.default">该渲染器的默认图</system:String>
+  <system:String x:Key="expressiongraph.delete">删除</system:String>
+  <system:String x:Key="expressiongraph.deletenode">删除节点</system:String>
+  <system:String x:Key="expressiongraph.duplicate">创建副本</system:String>
+  <system:String x:Key="expressiongraph.error">未使用，原因</system:String>
+  <system:String x:Key="expressiongraph.export">导出…</system:String>
+  <system:String x:Key="expressiongraph.graph">图</system:String>
+  <system:String x:Key="expressiongraph.hint">右键单击可添加节点。从节点的输出端拖拽到另一节点的输入端即可连线。</system:String>
+  <system:String x:Key="expressiongraph.hint.nograph">点击“新建”为渲染器创建表情节点图。</system:String>
+  <system:String x:Key="expressiongraph.import">导入…</system:String>
+  <system:String x:Key="expressiongraph.import.added">已添加的表情</system:String>
+  <system:String x:Key="expressiongraph.import.conflicts">本工程中已有不同的定义，已保留本工程的定义</system:String>
+  <system:String x:Key="expressiongraph.import.invalid">不是有效的表情节点图文件</system:String>
+  <system:String x:Key="expressiongraph.import.newer">该表情节点图文件由更新版本的 OpenUtau 保存</system:String>
+  <system:String x:Key="expressiongraph.input">输入</system:String>
+  <system:String x:Key="expressiongraph.missing">不可用</system:String>
+  <system:String x:Key="expressiongraph.name">名称</system:String>
+  <system:String x:Key="expressiongraph.new">新建</system:String>
+  <system:String x:Key="expressiongraph.node.abs">绝对值</system:String>
+  <system:String x:Key="expressiongraph.node.add">加</system:String>
+  <system:String x:Key="expressiongraph.node.clamp">钳制</system:String>
+  <system:String x:Key="expressiongraph.node.constant">常量</system:String>
+  <system:String x:Key="expressiongraph.node.curve_input">曲线</system:String>
+  <system:String x:Key="expressiongraph.node.curve_output">曲线输出</system:String>
+  <system:String x:Key="expressiongraph.node.divide">除</system:String>
+  <system:String x:Key="expressiongraph.node.lfo">LFO（低频振荡）</system:String>
+  <system:String x:Key="expressiongraph.node.map_range">范围映射</system:String>
+  <system:String x:Key="expressiongraph.node.masked_curve_input">蒙版曲线</system:String>
+  <system:String x:Key="expressiongraph.node.max">最大值</system:String>
+  <system:String x:Key="expressiongraph.node.min">最小值</system:String>
+  <system:String x:Key="expressiongraph.node.mix">混合</system:String>
+  <system:String x:Key="expressiongraph.node.multiply">乘</system:String>
+  <system:String x:Key="expressiongraph.node.note_envelope">音符包络</system:String>
+  <system:String x:Key="expressiongraph.node.note_position">音符内位置</system:String>
+  <system:String x:Key="expressiongraph.node.phrase_notes">乐句音符计数</system:String>
+  <system:String x:Key="expressiongraph.node.phoneme_input">音素表情</system:String>
+  <system:String x:Key="expressiongraph.node.phoneme_output">音素表情输出</system:String>
+  <system:String x:Key="expressiongraph.node.pitch_input">音高</system:String>
+  <system:String x:Key="expressiongraph.node.pitch_output">音高输出</system:String>
+  <system:String x:Key="expressiongraph.node.subtract">减</system:String>
+  <system:String x:Key="expressiongraph.noexpression">请选择表情。</system:String>
+  <system:String x:Key="expressiongraph.output">输出</system:String>
+  <system:String x:Key="expressiongraph.pitchcurve">绘制并载入音高到</system:String>
+  <system:String x:Key="expressiongraph.pitchcurve.pitd">音高偏差 (PITD)</system:String>
+  <system:String x:Key="expressiongraph.pitchcurve.pito">音高覆盖 (PITO)</system:String>
+  <system:String x:Key="expressiongraph.renderer">渲染器</system:String>
+  <system:String x:Key="expressiongraph.tab">节点图</system:String>
+  <system:String x:Key="expressiongraph.unavailable">该图的渲染器不支持此功能。</system:String>
+  <system:String x:Key="expressiongraph.unknownnode">未知节点：当前版本无法运行它。</system:String>
+  <system:String x:Key="expressiongraph.unused">没有音轨使用该图。</system:String>
+  <system:String x:Key="expressiongraph.usedby">使用者</system:String>
 
   <system:String x:Key="exps.abbr">简称</system:String>
   <system:String x:Key="exps.caption">表情</system:String>
@@ -292,10 +365,12 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="exps.sepbycomma">用','分隔多项值</system:String>
   <system:String x:Key="exps.skipoutput">当值为系统默认时跳过Flag输出</system:String>
   <system:String x:Key="exps.systemdefault">系统默认</system:String>
+  <system:String x:Key="exps.tab">表情</system:String>
   <system:String x:Key="exps.track">音轨表情（覆盖）</system:String>
   <system:String x:Key="exps.trackdefault">音轨默认</system:String>
   <system:String x:Key="exps.type">类型</system:String>
   <system:String x:Key="exps.type.curve">曲线</system:String>
+  <system:String x:Key="exps.type.maskedcurve">蒙版曲线</system:String>
   <system:String x:Key="exps.type.numerical">数值</system:String>
   <system:String x:Key="exps.type.options">选项</system:String>
 
@@ -388,7 +463,7 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="menu.tools.clearcache">清空缓存</system:String>
   <system:String x:Key="menu.tools.dawintegration">DAW 集成...</system:String>
   <system:String x:Key="menu.tools.debugwindow">调试窗口</system:String>
-  <!--<system:String x:Key="menu.tools.dependency.install">Install Dependency (.oudep)...</system:String>-->
+  <system:String x:Key="menu.tools.dependency.install">安装依赖项 (.oudep)…</system:String>
   <system:String x:Key="menu.tools.fullscreen">全屏</system:String>
   <system:String x:Key="menu.tools.layout">界面布局</system:String>
   <system:String x:Key="menu.tools.layout.hsplit11">水平分布 1:1</system:String>
@@ -516,7 +591,7 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="packages.unknownversion">未知版本</system:String>
   <system:String x:Key="packages.update">更新</system:String>
 
-  <!--<system:String x:Key="phoneme.show.error">Alt + Click to view the full error</system:String>-->
+  <system:String x:Key="phoneme.show.error">按住 Alt 点击可查看全部错误</system:String>
 
   <system:String x:Key="phoneticassistant.caption">拆音助手</system:String>
   <system:String x:Key="phoneticassistant.copy">复制</system:String>
@@ -526,7 +601,7 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="pianoroll.menu.batch.running">正在运行批处理</system:String>
   <system:String x:Key="pianoroll.menu.external">外部</system:String>
   <system:String x:Key="pianoroll.menu.lyrics">歌词</system:String>
-  <!--<system:String x:Key="pianoroll.menu.lyrics.addphonetichints">Add Phonetic Hint</system:String>-->
+  <system:String x:Key="pianoroll.menu.lyrics.addphonetichints">添加音标提示</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.dashtoplus">将 "-" 替换为 "+"</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.dashtoplustilda">将“-”替换为“+~”</system:String>
   <system:String x:Key="pianoroll.menu.lyrics.edit">编辑歌词</system:String>
@@ -585,9 +660,9 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="pianoroll.snapdiv">网格精度</system:String>
   <system:String x:Key="pianoroll.toggle.expressions">查看表情 (L)</system:String>
   <system:String x:Key="pianoroll.toggle.finalpitch">显示最终音高线 (R)</system:String>
-  <!--<system:String x:Key="pianoroll.toggle.hidepianoroll">Hide Piano Roll</system:String>-->
-  <!--<system:String x:Key="pianoroll.toggle.livepitch.fast">Live Pitch (Fast): auto-regenerate DiffSinger pitch after edits (fastest)</system:String>-->
-  <!--<system:String x:Key="pianoroll.toggle.livepitch.normal">Live Pitch (Normal): auto-regenerate DiffSinger pitch after edits</system:String>-->
+  <system:String x:Key="pianoroll.toggle.hidepianoroll">隐藏钢琴窗</system:String>
+  <system:String x:Key="pianoroll.toggle.livepitch.fast">实时音高（快速）：编辑后自动重新生成 DiffSinger 音高（最快）</system:String>
+  <system:String x:Key="pianoroll.toggle.livepitch.normal">实时音高（标准）：编辑后自动重新生成 DiffSinger 音高</system:String>
   <system:String x:Key="pianoroll.toggle.mergephrases">自动合并临近段落（DiffSinger）</system:String>
   <system:String x:Key="pianoroll.toggle.noteparams">显示参数面板 (\)</system:String>
   <system:String x:Key="pianoroll.toggle.overwritepitch">音高覆写模式</system:String>
@@ -601,6 +676,31 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="pianoroll.toggle.tone">开关音符音 (Y)</system:String>
   <system:String x:Key="pianoroll.toggle.vibrato">显示颤音 (U)</system:String>
   <system:String x:Key="pianoroll.toggle.waveform">显示波形 (W)</system:String>
+  <system:String x:Key="pianoroll.tool.curve.cursor">光标工具
+    左键拖拽选择曲线区间</system:String>
+  <system:String x:Key="pianoroll.tool.curve.pen">画笔工具
+    左键绘制曲线
+    右键重置数值</system:String>
+  <system:String x:Key="pianoroll.tool.curve.line">直线工具
+    左键绘制直线
+    右键重置数值</system:String>
+  <system:String x:Key="pianoroll.tool.curve.eraser">橡皮工具
+    单击重置数值</system:String>
+  <system:String x:Key="pianoroll.tool.curve.verticalstretch">垂直拉伸工具
+    左键拖拽垂直拉伸所选曲线区间
+    右键重置</system:String>
+  <system:String x:Key="pianoroll.tool.curve.horizontalstretch">水平拉伸工具
+    左键拖拽水平拉伸所选曲线区间
+    右键重置</system:String>
+  <system:String x:Key="pianoroll.tool.curve.verticalshift">垂直位移工具
+    左键拖拽垂直移动所选曲线区间
+    右键重置</system:String>
+  <system:String x:Key="pianoroll.tool.curve.horizontalshift">水平位移工具
+    左键拖拽水平移动所选曲线区间
+    右键重置</system:String>
+  <system:String x:Key="pianoroll.tool.curve.phonemesnap">阶梯工具
+    左键绘制，每个音素取一个恒定值
+    右键重置音素段</system:String>
   <system:String x:Key="pianoroll.tool.drawpitch">自由绘制工具 (Shift + 1)
     左键绘制
     右键重置
@@ -623,10 +723,10 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
     左键绘制直线
     右键重置
     按住 Ctrl 选择</system:String>
-  <!--<system:String x:Key="pianoroll.tool.pitchpoint">Pitch Point Tool (5)
-    Left click to add point
-    Drag to move only the point
-    Hold Ctrl to select</system:String>-->
+  <system:String x:Key="pianoroll.tool.pitchpoint">音高基点工具 (5)
+    左键添加基点
+    拖拽仅移动该基点
+    按住 Ctrl 多选</system:String>
   <system:String x:Key="pianoroll.tool.pitchscurve">S形曲线工具 (Shift + 3)
     拖动绘制 S 形曲线，松开进入调整模式
     移动鼠标调整曲线强度，点击应用
@@ -644,6 +744,7 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
 
   <system:String x:Key="prefs.advanced">高级</system:String>
   <system:String x:Key="prefs.advanced.beta">Beta测试版</system:String>
+  <system:String x:Key="prefs.advanced.defaultsnapcurve">默认吸附曲线</system:String>
   <system:String x:Key="prefs.advanced.lyricshelper">歌词助手</system:String>
   <system:String x:Key="prefs.advanced.lyricshelper.brackets">歌词助手添加方括号</system:String>
   <system:String x:Key="prefs.advanced.rememberfiletypes">在"最近打开"中记住以下文件格式</system:String>
@@ -651,7 +752,7 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="prefs.advanced.resamplerlogging.warn">在日志文件中保存resampler输出。这个选项会使UI和渲染性能下降。</system:String>
   <system:String x:Key="prefs.advanced.stable">稳定版</system:String>
   <system:String x:Key="prefs.advanced.vlabelerpath">vLabeler 路径</system:String>
-  <!--<system:String x:Key="prefs.advanced.wayland">Use Wayland</system:String>-->
+  <system:String x:Key="prefs.advanced.wayland">使用 Wayland</system:String>
   <system:String x:Key="prefs.advanced.winepath">Wine 路径 (设置以启用 Wine 获得兼容性)</system:String>
   <system:String x:Key="prefs.appearance">外观</system:String>
   <system:String x:Key="prefs.appearance.customtheme.create.empty">主题名称不能为空</system:String>
@@ -664,14 +765,15 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="prefs.appearance.degree.numbered">简谱 (1 2 3 4 5 6 7)</system:String>
   <system:String x:Key="prefs.appearance.degree.off">关闭</system:String>
   <system:String x:Key="prefs.appearance.degree.solfege">唱名 (do re mi fa sol la ti)</system:String>
-  <!--<system:String x:Key="prefs.appearance.detachpianoroll">Show piano roll in separate window</system:String>-->
+  <system:String x:Key="prefs.appearance.detachpianoroll">在独立窗口中显示钢琴窗</system:String>
   <system:String x:Key="prefs.appearance.diffsingerlangcodehide">在音素编辑器中隐藏语言前缀</system:String>
   <system:String x:Key="prefs.appearance.lang">语言</system:String>
-  <!--<system:String x:Key="prefs.appearance.notehoverglow">Note hover glow</system:String>-->
-  <!--<system:String x:Key="prefs.appearance.playbacknotebounce">Bounce notes on playback</system:String>-->
-  <!--<system:String x:Key="prefs.appearance.playbacknotehighlight">Highlight notes on playback</system:String>-->
+  <system:String x:Key="prefs.appearance.notehoverglow">音符悬停发光</system:String>
+  <system:String x:Key="prefs.appearance.playbacknotebounce">播放时音符跳动</system:String>
+  <system:String x:Key="prefs.appearance.playbacknotehighlight">播放时高亮音符</system:String>
   <system:String x:Key="prefs.appearance.showghostnotes">在钢琴窗上显示其他音轨的音符</system:String>
   <system:String x:Key="prefs.appearance.showicon">在钢琴窗上显示歌手图标</system:String>
+  <system:String x:Key="prefs.appearance.reduceanimations">减少动画效果</system:String>
   <system:String x:Key="prefs.appearance.showportrait">在钢琴窗上显示歌手背景图</system:String>
   <system:String x:Key="prefs.appearance.sortorder">歌手名称显示语言</system:String>
   <system:String x:Key="prefs.appearance.theme">主题</system:String>
@@ -682,10 +784,10 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="prefs.cache.clearonquit">退出时清空缓存</system:String>
   <system:String x:Key="prefs.cache.diffsingertensorcache">DiffSinger 张量缓存</system:String>
   <system:String x:Key="prefs.caption">使用偏好</system:String>
-  <!--<system:String x:Key="prefs.channel">Release Channel</system:String>-->
+  <system:String x:Key="prefs.channel">发布通道</system:String>
   <!--<system:String x:Key="prefs.channel.alpha">Alpha</system:String>-->
   <!--<system:String x:Key="prefs.channel.beta">Beta</system:String>-->
-  <!--<system:String x:Key="prefs.channel.stable">Stable</system:String>-->
+  <system:String x:Key="prefs.channel.stable">稳定版</system:String>
   <!--<system:String x:Key="prefs.diffsinger">DiffSinger</system:String>-->
   <system:String x:Key="prefs.editing">编辑</system:String>
   <system:String x:Key="prefs.general">通用</system:String>
@@ -715,6 +817,10 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="prefs.playback.lockstarttime.off">什么都不做</system:String>
   <system:String x:Key="prefs.playback.lockstarttime.on">将播放标记和视图移回开始播放处</system:String>
   <system:String x:Key="prefs.playback.lockstarttime.onlycursor">将播放标记移回开始播放处，不回滚视图</system:String>
+  <system:String x:Key="prefs.playback.metronome">节拍器</system:String>
+  <system:String x:Key="prefs.playback.metronome.volume">节拍器音量</system:String>
+  <system:String x:Key="prefs.playback.metronome.highfrequency">节拍器强拍频率</system:String>
+  <system:String x:Key="prefs.playback.metronome.lowfrequency">节拍器弱拍频率</system:String>
   <system:String x:Key="prefs.playback.systemdefault">使用系统默认设备</system:String>
   <system:String x:Key="prefs.playback.test">测试</system:String>
   <system:String x:Key="prefs.rendering">渲染</system:String>
@@ -725,12 +831,13 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="prefs.rendering.diffsingerstepspitch">针对于 Pitch 的 DiffSinger 渲染步骤</system:String>
   <system:String x:Key="prefs.rendering.diffsingerstepsvariance">针对于 Variance 的 DiffSinger 渲染步骤</system:String>
   <system:String x:Key="prefs.rendering.diffsingervariancelocalpitchpatch">DiffSinger 编辑音高时保留未编辑区域演唱细节</system:String>
-  <!--<system:String x:Key="prefs.rendering.gamebackend">GAME Inference Backend</system:String>-->
+  <system:String x:Key="prefs.rendering.gamebackend">GAME 推理后端</system:String>
+  <system:String x:Key="prefs.rendering.mergephrases">乐句合并时长（秒）</system:String>
   <!--<system:String x:Key="prefs.rendering.onnxgpu">GPU</system:String>-->
   <system:String x:Key="prefs.rendering.onnxrunner">机器学习运行器</system:String>
   <system:String x:Key="prefs.rendering.phasecomp">相位修正</system:String>
   <system:String x:Key="prefs.rendering.prerender">预渲染</system:String>
-  <!--<system:String x:Key="prefs.rendering.resampler">Resampler</system:String>-->
+  <system:String x:Key="prefs.rendering.resampler">重采样器</system:String>
   <system:String x:Key="prefs.rendering.resampler.morewarn">警告: 暂不完全支持 moresampler。可能导致渲染缓慢和高CPU使用率。如果您仍想使用，请:
 1. 在 moreconfig.txt 中将 “resampler-compatibility” 设为 “on”。
 2. 在 moreconfig.txt 中将 “auto-update-llsm-mrq” 设为 “off”。
@@ -739,6 +846,7 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="prefs.rendering.skipmuted">跳过静音音轨</system:String>
   <system:String x:Key="prefs.rendering.threads.cpuwarn">警告: 渲染线程过多可能会导致OpenUtau运行缓慢。</system:String>
   <system:String x:Key="prefs.rendering.threads.numthreads">最大渲染线程数</system:String>
+  <system:String x:Key="prefs.placeholdertext.none">（无）</system:String>
   <!--<system:String x:Key="prefs.rendering.wavtool">Wavtool</system:String>-->
   <!--<system:String x:Key="prefs.utau">UTAU</system:String>-->
 
@@ -796,6 +904,7 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="singers.errorreport">生成歌手错误报告</system:String>
   <system:String x:Key="singers.location">位置</system:String>
   <system:String x:Key="singers.merge">与另一个声库合并</system:String>
+  <system:String x:Key="singers.oto">Oto 参数</system:String>
   <system:String x:Key="singers.otoview.moveleft">左移</system:String>
   <system:String x:Key="singers.otoview.moveright">右移</system:String>
   <system:String x:Key="singers.otoview.selectnext">下一个</system:String>
@@ -846,8 +955,8 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="singersetup.textfileencoding.prompt">请选择一种编码，使文件内容看起来是正确的。</system:String>
   <system:String x:Key="singersetup.title">安装歌手</system:String>
 
-  <!--<system:String x:Key="themeeditor.cancel">Cancel</system:String>-->
-  <!--<system:String x:Key="themeeditor.save">Save</system:String>-->
+  <system:String x:Key="themeeditor.cancel">取消</system:String>
+  <system:String x:Key="themeeditor.save">保存</system:String>
   <system:String x:Key="themeeditor.title">主题编辑器</system:String>
 
   <system:String x:Key="tip.aliasbox">手动选择别名</system:String>
@@ -880,7 +989,7 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
     空格键: 播放</system:String>
   <system:String x:Key="tip.notes.zoomx">◀ 鼠标滚轮横向缩放 ▶</system:String>
   <system:String x:Key="tip.notes.zoomy">鼠标滚轮纵向缩放 ▶</system:String>
-  <!--<system:String x:Key="tip.playback.loop">Loop playback</system:String>-->
+  <system:String x:Key="tip.playback.loop">循环播放</system:String>
 
   <system:String x:Key="tracks.duplicate">复制音轨</system:String>
   <system:String x:Key="tracks.duplicatesettings">复制音轨设置</system:String>
@@ -895,10 +1004,20 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="tracks.mute.only">仅使这个音轨静音</system:String>
   <system:String x:Key="tracks.mute.unmuteall">全部取消静音</system:String>
   <system:String x:Key="tracks.nosinger">此处没有歌手</system:String>
+  <system:String x:Key="tracks.nosingermatch">没有匹配的歌手</system:String>
   <system:String x:Key="tracks.openaddsingers">打开额外歌手路径</system:String>
+  <system:String x:Key="tracks.openlocation">打开所在位置</system:String>
   <system:String x:Key="tracks.opensingers">打开歌手路径</system:String>
   <system:String x:Key="tracks.remove">移除</system:String>
+  <system:String x:Key="tracks.removefromrecent">从最近使用移除</system:String>
   <system:String x:Key="tracks.rename">重命名音轨</system:String>
+  <system:String x:Key="tracks.searchsinger">搜索歌手</system:String>
+  <system:String x:Key="tracks.searchterms">搜索词</system:String>
+  <system:String x:Key="tracks.searchterms.edit">编辑搜索词…</system:String>
+  <system:String x:Key="tracks.searchterms.prompt">用于找到该歌手的额外关键词，以逗号分隔。</system:String>
+  <system:String x:Key="tracks.expressiongraph">表情节点图</system:String>
+  <system:String x:Key="tracks.expressiongraph.default">渲染器默认</system:String>
+  <system:String x:Key="tracks.expressiongraph.none">无</system:String>
   <system:String x:Key="tracks.selectrenderer">选择渲染器</system:String>
   <system:String x:Key="tracks.selectsinger">选择歌手</system:String>
   <system:String x:Key="tracks.singerdefault">(歌手默认) </system:String>
@@ -923,6 +1042,13 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="warning">警告</system:String>
   <system:String x:Key="warning.asciipath">OpenUtau路径"{0}"包含非ASCII字符. Exe格式resampler可能无法正常工作.</system:String>
   <system:String x:Key="warning.renderer">此渲染器没有设置项</system:String>
+  <system:String x:Key="warnings">警告</system:String>
+  <system:String x:Key="warnings.clear">清除全部</system:String>
+  <system:String x:Key="warnings.dismiss">忽略</system:String>
+  <system:String x:Key="warnings.singers.duplicate">声库文件夹重复“{0}”</system:String>
+  <system:String x:Key="warnings.singers.duplicate.detail">正在使用：{1}
+    已忽略：{2}
+    重命名被忽略的文件夹即可加载它。</system:String>
 
   <system:String x:Key="welcome.new">新建</system:String>
   <system:String x:Key="welcome.new.description">创建新项目</system:String>
@@ -931,4 +1057,26 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="welcome.recent">最近</system:String>
   <system:String x:Key="welcome.start">开始</system:String>
   <system:String x:Key="welcome.template">模板</system:String>
+  <system:String x:Key="yamleditor.default">默认值：{0}</system:String>
+  <system:String x:Key="yamleditor.discarded">{0} 存在错误，无法保存。对它的修改已被丢弃。</system:String>
+  <system:String x:Key="yamleditor.errors">错误：{0}，警告：{1}。OpenUtau 无法加载此文件；请修正错误后再保存。</system:String>
+  <system:String x:Key="yamleditor.noproblems">未发现问题</system:String>
+  <system:String x:Key="yamleditor.revert">还原</system:String>
+  <system:String x:Key="yamleditor.save">保存</system:String>
+  <system:String x:Key="yamleditor.syntax">不是有效的 YAML：{0}</system:String>
+  <system:String x:Key="yamleditor.type.bool">true 或 false</system:String>
+  <system:String x:Key="yamleditor.type.choice">以下之一：{0}</system:String>
+  <system:String x:Key="yamleditor.type.integer">整数</system:String>
+  <system:String x:Key="yamleditor.type.list">{0} 列表</system:String>
+  <system:String x:Key="yamleditor.type.map">{0} 映射</system:String>
+  <system:String x:Key="yamleditor.type.number">数字</system:String>
+  <system:String x:Key="yamleditor.type.section">键值区段</system:String>
+  <system:String x:Key="yamleditor.type.text">文本</system:String>
+  <system:String x:Key="yamleditor.unknownkey">未知键“{0}”，OpenUtau 会忽略它。请检查拼写。</system:String>
+  <system:String x:Key="yamleditor.unsaved">要保存对 {0} 的更改吗？</system:String>
+  <system:String x:Key="yamleditor.unsaved.caption">未保存的更改</system:String>
+  <system:String x:Key="yamleditor.unsaved.errors">{0} 存在错误，无法保存。要放弃更改吗？</system:String>
+  <system:String x:Key="yamleditor.value">值：{0}</system:String>
+  <system:String x:Key="yamleditor.warnings">警告：{0}。OpenUtau 会忽略这些部分；仍可保存。</system:String>
+  <system:String x:Key="yamleditor.wrongtype">应为{0}。</system:String>
 </ResourceDictionary>
