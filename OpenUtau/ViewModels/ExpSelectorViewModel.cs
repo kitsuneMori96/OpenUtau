@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using Avalonia.Media;
 using OpenUtau.App.Controls;
 using OpenUtau.Core;
+using OpenUtau.Core.Render;
 using OpenUtau.Core.Ustx;
 using ReactiveUI;
 using ReactiveUI.Primitives;
@@ -86,23 +88,92 @@ namespace OpenUtau.App.ViewModels {
         }
 
         public void OnNext(UCommand cmd, bool isUndo) {
-            if (cmd is LoadProjectNotification ||
-                cmd is LoadPartNotification ||
-                cmd is ConfigureExpressionsCommand) {
-                OnListChange();
+            if (cmd is LoadPartNotification loadPart) {
+                activeTrackNo = loadPart.part.trackNo;
+                OnListChange(allowSuggestions: true);
+            } else if (cmd is LoadProjectNotification) {
+                activeTrackNo = null;
+                OnListChange(allowSuggestions: true);
+            } else if (cmd is ConfigureExpressionsCommand || cmd is ValidateProjectNotification) {
+                // Undoing the automatic "add suggestions" commit must not redo it right away.
+                OnListChange(allowSuggestions: !isUndo || cmd is not ConfigureExpressionsCommand);
             } else if (cmd is SelectExpressionNotification) {
                 OnSelectExp((SelectExpressionNotification)cmd);
             }
         }
 
-        private void OnListChange() {
+        // The track of the part currently shown in the piano roll, shared by all selector instances.
+        static int? activeTrackNo;
+        bool refreshing;
+
+        private void OnListChange(bool allowSuggestions = true) {
+            // Adding suggestions executes ConfigureExpressionsCommand, which calls back into here.
+            if (refreshing) {
+                return;
+            }
+            refreshing = true;
+            try {
+                OnListChangeInner(allowSuggestions);
+            } finally {
+                refreshing = false;
+            }
+        }
+
+        private void OnListChangeInner(bool allowSuggestions) {
+            var project = DocManager.Inst.Project;
             var selectedIndex = SelectedIndex;
+            var activeAbbr = Descriptor?.abbr;
             Descriptors.Clear();
-            DocManager.Inst.Project.expressions.Values.ToList().ForEach(Descriptors.Add);
+            UTrack? track = activeTrackNo.HasValue && activeTrackNo.Value < project.tracks.Count
+                ? project.tracks[activeTrackNo.Value]
+                : null;
+            var renderer = track?.RendererSettings?.Renderer;
+            List<UExpressionDescriptor> exps;
+            if (track != null && renderer != null) {
+                if (allowSuggestions) {
+                    AddRendererSuggestions(project, track, renderer);
+                }
+                exps = track.GetSupportedExps(project);
+                // Masked curves feed expression graphs whatever the renderer is.
+                exps.AddRange(project.expressions.Values.Where(
+                    exp => exp.type == UExpressionType.MaskedCurve && !exps.Contains(exp)));
+            } else {
+                exps = project.expressions.Values.ToList();
+            }
+            exps.ForEach(Descriptors.Add);
+            // Re-resolve the selected descriptor: the rebuilt list holds fresh instances
+            // (e.g. the track's voice color clone), or may no longer support the abbr at all.
+            if (activeAbbr != null) {
+                SetExp(activeAbbr);
+            }
             if (selectedIndex >= descriptors.Count) {
                 selectedIndex = Index;
             }
             SelectedIndex = selectedIndex;
+        }
+
+        // Merge the renderer's suggested expressions into the project, as the
+        // expressions dialog's "Get suggestions" does, but automatically.
+        private static void AddRendererSuggestions(UProject project, UTrack track, IRenderer renderer) {
+            UExpressionDescriptor[]? suggestions = null;
+            try {
+                suggestions = renderer.GetSuggestedExpressions(track.Singer, track.RendererSettings);
+            } catch {
+                return;
+            }
+            if (suggestions == null) {
+                return;
+            }
+            var missing = suggestions
+                .Where(exp => !project.expressions.ContainsKey(exp.abbr))
+                .ToArray();
+            if (missing.Length == 0) {
+                return;
+            }
+            DocManager.Inst.StartUndoGroup("command.project.exp");
+            DocManager.Inst.ExecuteCmd(new ConfigureExpressionsCommand(
+                project, project.expressions.Values.Concat(missing).ToArray()));
+            DocManager.Inst.EndUndoGroup();
         }
 
         private void OnSelectExp(SelectExpressionNotification cmd) {
@@ -110,8 +181,10 @@ namespace OpenUtau.App.ViewModels {
                 return;
             }
             if (cmd.SelectorIndex == Index) {
-                if (Descriptors[SelectedIndex].abbr != cmd.ExpKey) {
-                    SelectedIndex = Descriptors.IndexOf(Descriptors.First(d => d.abbr == cmd.ExpKey));
+                // The selector list is renderer-filtered and may not contain the exp.
+                var descriptor = Descriptors.FirstOrDefault(d => d.abbr == cmd.ExpKey);
+                if (descriptor != null) {
+                    SelectedIndex = Descriptors.IndexOf(descriptor);
                 }
                 DisplayMode = ExpDisMode.Visible;
             } else if (cmd.UpdateShadow) {
