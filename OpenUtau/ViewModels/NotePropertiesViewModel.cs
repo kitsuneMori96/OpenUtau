@@ -735,7 +735,12 @@ namespace OpenUtau.App.ViewModels {
                             (start, (int)Math.Round(Math.Clamp(value.Value, descriptor.min, descriptor.max))),
                             (end, (int)Math.Round(Math.Clamp(value.Value, descriptor.min, descriptor.max)))
                         }
-                        : Array.Empty<(int x, int y)>();
+                        // Clearing must pin the segment to the default value; removing the points
+                        // alone would leave the curve interpolating between its neighbours.
+                        : new[] {
+                            (start, (int)descriptor.CustomDefaultValue),
+                            (end, (int)descriptor.CustomDefaultValue)
+                        };
                     (xs, ys) = UCurve.ReplaceRange(xs, ys, start, end, points, descriptor);
                 }
                 if (!xs.SequenceEqual(oldXs) || !ys.SequenceEqual(oldYs)) {

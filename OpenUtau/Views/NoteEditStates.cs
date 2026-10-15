@@ -1037,8 +1037,11 @@ namespace OpenUtau.App.Views {
                 if (end <= start) {
                     continue;
                 }
+                // Insert default-valued points instead of clearing empty: deleting the segment's
+                // points alone leaves the curve interpolating between its neighbours' old values.
+                int def = (int)descriptor.defaultValue;
                 (xs, ys) = UCurve.ReplaceRange(
-                    xs, ys, start, end, Array.Empty<(int x, int y)>(), descriptor);
+                    xs, ys, start, end, new[] { (start, def), (end, def) }, descriptor);
             }
             if (!xs.SequenceEqual(oldXs) || !ys.SequenceEqual(oldYs)) {
                 DocManager.Inst.ExecuteCmd(new MergedSetCurveCommand(
