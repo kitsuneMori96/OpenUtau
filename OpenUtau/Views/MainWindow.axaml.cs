@@ -803,16 +803,17 @@ namespace OpenUtau.App.Views {
                 PathManager.Inst.ClearCache();
                 DocManager.Inst.ExecuteCmd(new ProgressBarNotification(0, ThemeManager.GetString("progress.cachecleared")));
             });
+            partsCanvas.SetAllRenderPhrases(false);
         }
 
-        void OnMenuDebugWindow(object sender, RoutedEventArgs args) {
+        void OnMenuDeveloperWindow(object sender, RoutedEventArgs args) {
             var desktop = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
             if (desktop == null) {
                 return;
             }
-            var window = desktop.Windows.FirstOrDefault(w => w is DebugWindow);
+            var window = desktop.Windows.FirstOrDefault(w => w is DeveloperWindow);
             if (window == null) {
-                window = new DebugWindow();
+                window = new DeveloperWindow();
             }
             ShowToolWindow(window);
         }
@@ -1979,21 +1980,38 @@ namespace OpenUtau.App.Views {
             }
         }
 
+        /// <summary>
+        /// Remaps voice colors, and imported DiffSinger vocal modes, of every track after an import
+        /// or after a singer change.
+        /// </summary>
         async void ValidateTracksVoiceColor() {
             DocManager.Inst.StartUndoGroup("command.track.remapvc");
-            foreach (var track in DocManager.Inst.Project.tracks) {
-                if (track.ValidateVoiceColor(out var oldColors, out var newColors)) {
-                    await VoiceColorRemappingAsync(track, oldColors, newColors);
+            try {
+                foreach (var track in DocManager.Inst.Project.tracks) {
+                    if (track.ValidateVoiceColor(out var oldColors, out var newColors)) {
+                        await VoiceColorRemappingAsync(track, oldColors, newColors);
+                    }
+                    await RemapImportedVocalModesAsync(track);
                 }
-                await RemapImportedVocalModesAsync(track);
+            } finally {
+                // Must close the group even if a remapping dialog or an import threw, otherwise
+                // the undo stack stays inside a group nobody ends.
+                DocManager.Inst.EndUndoGroup();
             }
-            DocManager.Inst.EndUndoGroup();
         }
 
+        /// <summary>
+        /// Offers to copy the curves of vocal modes that came in with an imported project onto
+        /// DiffSinger voice color curves, so the modes keep working on the current singer.
+        /// </summary>
         async Task RemapImportedVocalModesAsync(UTrack track) {
             if (track.Singer?.SingerType != USingerType.DiffSinger) return;
             track.Singer.EnsureLoaded();
             if (!track.Singer.Loaded) return;
+            // A DiffSinger voicebank that declares no subbanks has no voice color to remap onto,
+            // so there is nothing to ask the user about.
+            var colors = track.Singer.Subbanks.Select(s => s.Color).ToArray();
+            if (colors.Length == 0) return;
             var parts = DocManager.Inst.Project.parts.Where(p => p.trackNo == track.TrackNo && p is UVoicePart).Cast<UVoicePart>().ToArray();
             var modes = parts.SelectMany(p => p.curves)
                 .Where(c => c.descriptor != null && IsImportedVocalModeCurve(c.abbr))
@@ -2004,16 +2022,19 @@ namespace OpenUtau.App.Views {
             if (modes.Length == 0) return;
 
             var oldModes = new[] { "" }.Concat(modes).ToArray();
-            var colors = track.Singer.Subbanks.Select(s => s.Color).ToArray();
             var dialog = new VoiceColorMappingDialog { DataContext = new VoiceColorMappingViewModel(oldModes, colors, track.TrackName) };
             await dialog.ShowDialog(this);
             if (!dialog.Apply) return;
 
+            // SelectedIndex 0 is "(Default)", which leaves the imported curve untouched, so only rows
+            // mapped to an actual voice color are copied.
             foreach (var mapping in ((VoiceColorMappingViewModel)dialog.DataContext).ColorMappings.Where(m => m.OldIndex > 0 && m.SelectedIndex > 0)) {
                 var sourceName = modes[mapping.OldIndex - 1];
                 var sourceDescriptor = DocManager.Inst.Project.expressions.Values.FirstOrDefault(d => d.name.Equals(sourceName, StringComparison.OrdinalIgnoreCase));
                 if (sourceDescriptor == null) continue;
-                string targetAbbr = $"cl{mapping.SelectedIndex:D2}";
+                // SelectedIndex is the subbank index chosen in the dialog, while DiffSinger exposes
+                // subbank k as curve cl(k+1) (see DiffSingerRenderer.GetExpressions).
+                string targetAbbr = $"cl{mapping.SelectedIndex + 1:D2}";
                 if (!DocManager.Inst.Project.expressions.TryGetValue(targetAbbr, out var targetDescriptor)) {
                     targetDescriptor = new UExpressionDescriptor($"voice color {colors[mapping.SelectedIndex]}", targetAbbr, 0, 100, 0) { type = UExpressionType.Curve };
                     DocManager.Inst.Project.RegisterExpression(targetDescriptor);
@@ -2174,6 +2195,27 @@ namespace OpenUtau.App.Views {
                         VoiceColorRemapping(track, oldColors, newColors);
                     }
                     _ = RemapImportedVocalModesAsync(track);
+                }
+            } else if (cmd is PhraseRenderStateNotification phraseRenderNotif) {
+                if (phraseRenderNotif.Phrase != null) {
+                    partsCanvas.HandlePhraseRenderStateEvent(
+                        phraseRenderNotif.Part,
+                        phraseRenderNotif.Phrase,
+                        phraseRenderNotif.Rendered);
+                } else {
+                    partsCanvas.HandlePhraseRenderStateEvent(
+                        phraseRenderNotif.Part,
+                        phraseRenderNotif.StartTick,
+                        phraseRenderNotif.EndTick,
+                        phraseRenderNotif.Rendered);
+                }
+            } else if (cmd is RebuildPhraseBlocksNotification phraseBlocksNotif) {
+                partsCanvas.HandleRebuildPhraseBlocksEvent(phraseBlocksNotif.Part);
+            } else if (cmd is TrackChangeSingerCommand changeSingerCommand) {
+                partsCanvas.SetAllRenderPhrases(changeSingerCommand.track, false);
+            } else if (cmd is MovePartCommand movePartCommand) {
+                if (movePartCommand.part is UVoicePart voicePart) {
+                    partsCanvas.SetAllRenderPhrases(voicePart, false);
                 }
             }
         }
