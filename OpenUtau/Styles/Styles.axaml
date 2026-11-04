@@ -65,6 +65,14 @@
     <Setter Property="Padding" Value="4,2,4,2"/>
   </Style>
 
+  <!-- The menu scroll arrows dock real height, so showing them shrinks the viewport, which is one of
+       the four inputs to the arrows' own visibility; hovering an item scrolls it into view and the
+       arrows flip on and off, moving the whole list by one arrow height each time. Menus still
+       scroll by wheel, keyboard and scroll-into-view with the buttons gone. -->
+  <Style Selector="ContextMenu /template/ ScrollViewer, MenuItem /template/ ScrollViewer">
+    <Setter Property="VerticalScrollBarVisibility" Value="Hidden"/>
+  </Style>
+
   <Style Selector="ContextMenu.WithCommand MenuItem" x:DataType="vm:MenuItemViewModel">
     <Setter Property="Header" Value="{Binding Header}"/>
     <Setter Property="Command" Value="{Binding Command}"/>
