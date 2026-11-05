@@ -57,6 +57,19 @@
          package never had a 1.23.1/1.23.2, so the former "1.23.2" silently
          resolved upward to 1.24.x through NU1603. -->
     <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.23.0" />
+    <PackageReference Include="Microsoft.AI.DirectML" Version="1.15.4" GeneratePathProperty="true" PrivateAssets="all" />
+  </ItemGroup>
+  <!-- DirectML.dll is only copied by the package's own targets when PlatformTarget is
+       explicit, which CI sets through -r but a plain `dotnet build` (AnyCPU) does not.
+       Without the DLL, creating a DirectML session kills the process natively instead of
+       throwing, so copy it for every Windows build. -->
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+    <None Include="$(PkgMicrosoft_AI_DirectML)\bin\x64-win\DirectML.dll" Link="DirectML.dll"
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false"
+          Condition="'$(RuntimeIdentifier)' != 'win-arm64' And '$(PlatformTarget)' != 'ARM64' And '$(PlatformTarget)' != 'arm64'" />
+    <None Include="$(PkgMicrosoft_AI_DirectML)\bin\arm64-win\DirectML.dll" Link="DirectML.dll"
+          CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false"
+          Condition="'$(RuntimeIdentifier)' == 'win-arm64' Or '$(PlatformTarget)' == 'ARM64' Or '$(PlatformTarget)' == 'arm64'" />
   </ItemGroup>
   <ItemGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">
     <PackageReference Include="Microsoft.ML.OnnxRuntime.Gpu.Linux" Version="1.24.4" />
