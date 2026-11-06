@@ -408,6 +408,9 @@ namespace OpenUtau.App.Controls {
                     }
                     RenderNoteBody(note, viewModel, context);
                 }
+                if (!hidePitch) {
+                    RenderReferencePitch(leftTick, rightTick, viewModel, context);
+                }
                 if (ShowFinalPitch && !hidePitch) {
                     RenderFinalPitch(leftTick, rightTick, viewModel, context);
                 }
@@ -827,6 +830,31 @@ namespace OpenUtau.App.Controls {
             periodEnd = periodEnd.WithX(periodEnd.X - 2).WithY(periodEnd.Y - height / 2 - 0.5f);
             context.DrawRectangle(null, pen, new Rect(periodStart, new Size(width, height)), 1, 1);
             context.DrawLine(pen, periodEnd, periodEnd + new Vector(0, height));
+        }
+
+        private void RenderReferencePitch(double leftTick, double rightTick, NotesViewModel viewModel, DrawingContext context) {
+            var curve = Part!.maskedCurves.FirstOrDefault(c => c.abbr == "f0");
+            if (curve == null) {
+                return;
+            }
+            // f0 is midi pitch x100, so it maps onto the note rows like the rendered pitch.
+            var pen = new Pen(ThemeManager.AccentBrush3, 1.5);
+            foreach (var run in curve.runs) {
+                if (run.ys.Length < 2 || run.End < leftTick || run.x > rightTick) {
+                    continue;
+                }
+                var points = new Points();
+                for (int i = 0; i < run.ys.Length; ++i) {
+                    int tick = run.x + i * UMaskedCurve.interval;
+                    if (tick < leftTick - UMaskedCurve.interval || tick > rightTick + UMaskedCurve.interval) {
+                        continue;
+                    }
+                    points.Add(viewModel.TickToneToPoint(tick, run.ys[i] / 100.0 - 0.5));
+                }
+                if (points.Count >= 2) {
+                    context.DrawGeometry(null, pen, new PolylineGeometry(points, false));
+                }
+            }
         }
 
         private void RenderFinalPitch(double leftTick, double rightTick, NotesViewModel viewModel, DrawingContext context) {

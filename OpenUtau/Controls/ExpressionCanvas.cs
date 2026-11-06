@@ -402,6 +402,10 @@ namespace OpenUtau.App.Controls {
             if (curve == null) {
                 return;
             }
+            if (descriptor.abbr == "f0") {
+                // f0 is a pitch reference; NotesCanvas draws it over the note rows where pitch is readable.
+                return;
+            }
             var pen = DisplayMode == ExpDisMode.Shadow ? new Pen(ThemeManager.NeutralAccentBrush, 3) : ThemeManager.AccentPen1Thickness3;
             foreach (var run in curve.runs) {
                 if (run.End < leftTick || run.x > rightTick) {
