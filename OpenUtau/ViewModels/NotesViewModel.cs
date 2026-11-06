@@ -60,6 +60,7 @@ namespace OpenUtau.App.ViewModels {
         [Reactive] public partial bool ShowVibrato { get; set; }
         [Reactive] public partial bool ShowPitch { get; set; }
         [Reactive] public partial bool ShowFinalPitch { get; set; }
+        [Reactive] public partial bool ShowReferencePitch { get; set; }
         [Reactive] public partial bool LivePitchNormal { get; set; }
         [Reactive] public partial bool LivePitchFast { get; set; }
         [Reactive] public partial bool MergeNearbyPhrases { get; set; }
@@ -287,6 +288,12 @@ namespace OpenUtau.App.ViewModels {
             this.WhenAnyValue(x => x.ShowFinalPitch)
             .Subscribe(showFinalPitch => {
                 Preferences.Default.ShowFinalPitch = showFinalPitch;
+                Preferences.Save();
+            });
+            ShowReferencePitch = Preferences.Default.ShowReferencePitch;
+            this.WhenAnyValue(x => x.ShowReferencePitch)
+            .Subscribe(showReferencePitch => {
+                Preferences.Default.ShowReferencePitch = showReferencePitch;
                 Preferences.Save();
             });
             ShowWaveform = Preferences.Default.ShowWaveform;

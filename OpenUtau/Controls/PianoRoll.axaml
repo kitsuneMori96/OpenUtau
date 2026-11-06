@@ -170,6 +170,7 @@
                      ShowVibrato="{Binding NotesViewModel.ShowVibrato}"
                      ShowPitch="{Binding NotesViewModel.ShowPitch}"
                      ShowFinalPitch="{Binding NotesViewModel.ShowFinalPitch}"
+                     ShowReferencePitch="{Binding NotesViewModel.ShowReferencePitch}"
                      ShowPhonemizerTags="{Binding ShowPhonemizerTags}"
                      ShowPlaybackNoteHighlight="{Binding NotesViewModel.ShowPlaybackNoteHighlight}"
                      ShowPlaybackNoteBounce="{Binding NotesViewModel.ShowPlaybackNoteBounce}"
@@ -454,6 +455,14 @@
                           ToolTip.Tip="{DynamicResource pianoroll.toggle.finalpitch}">
               <Grid Width="18" Height="18">
                 <Path Classes="stroked" Data="M 5.5 11.5 L 8 11.5 L 8.5 11 L 9.5 7 L 10 6.5 L 12.5 6.5"/>
+              </Grid>
+            </ToggleButton>
+            <ToggleButton Classes="toolbar" Margin="0" Padding="1" Height="20" Width="20" IsChecked="{Binding NotesViewModel.ShowReferencePitch}"
+                          ToolTip.Tip="{DynamicResource pianoroll.toggle.referencepitch}">
+              <Grid Width="18" Height="18">
+                <Path Classes="stroked" Data="M 2.5 10.5 L 5 10 L 6.5 6.5 M 9 5.5 L 11 9 L 13 9.5 L 15.5 5"/>
+                <Ellipse Classes="stroked" Height="3" Width="3" Margin="4,3.5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <Ellipse Classes="stroked" Height="3" Width="3" Margin="0,8,3.5,0" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
               </Grid>
             </ToggleButton>
             <ToggleButton Classes="toolbar" Margin="0" Padding="1" Height="20" Width="20" IsChecked="{Binding NotesViewModel.ShowWaveform}"

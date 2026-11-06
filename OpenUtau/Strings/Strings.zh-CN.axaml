@@ -664,6 +664,7 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="pianoroll.snapdiv">网格精度</system:String>
   <system:String x:Key="pianoroll.toggle.expressions">查看表情 (L)</system:String>
   <system:String x:Key="pianoroll.toggle.finalpitch">显示最终音高线 (R)</system:String>
+  <system:String x:Key="pianoroll.toggle.referencepitch">显示参考音高曲线 (f0)</system:String>
   <system:String x:Key="pianoroll.toggle.hidepianoroll">隐藏钢琴窗</system:String>
   <system:String x:Key="pianoroll.toggle.livepitch.fast">实时音高（快速）：编辑后自动重新生成 DiffSinger 音高（最快）</system:String>
   <system:String x:Key="pianoroll.toggle.livepitch.normal">实时音高（标准）：编辑后自动重新生成 DiffSinger 音高</system:String>

@@ -245,6 +245,7 @@ namespace OpenUtau.Core.Util {
             public bool ShowVibrato = true;
             public bool ShowPitch = true;
             public bool ShowFinalPitch = true;
+            public bool ShowReferencePitch = true;
             public bool ShowWaveform = true;
             public bool ShowPhoneme = true;
             public bool ShowExpressions = true;

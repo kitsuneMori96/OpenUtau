@@ -51,6 +51,11 @@ namespace OpenUtau.App.Controls {
                 nameof(ShowFinalPitch),
                 o => o.ShowFinalPitch,
                 (o, v) => o.ShowFinalPitch = v);
+        public static readonly DirectProperty<NotesCanvas, bool> ShowReferencePitchProperty =
+            AvaloniaProperty.RegisterDirect<NotesCanvas, bool>(
+                nameof(ShowReferencePitch),
+                o => o.ShowReferencePitch,
+                (o, v) => o.ShowReferencePitch = v);
         public static readonly DirectProperty<NotesCanvas, bool> ShowVibratoProperty =
             AvaloniaProperty.RegisterDirect<NotesCanvas, bool>(
                 nameof(ShowVibrato),
@@ -105,6 +110,10 @@ namespace OpenUtau.App.Controls {
             get => showFinalPitch;
             private set => SetAndRaise(ShowFinalPitchProperty, ref showFinalPitch, value);
         }
+        public bool ShowReferencePitch {
+            get => showReferencePitch;
+            private set => SetAndRaise(ShowReferencePitchProperty, ref showReferencePitch, value);
+        }
         public bool ShowVibrato {
             get => showVibrato;
             private set => SetAndRaise(ShowVibratoProperty, ref showVibrato, value);
@@ -133,6 +142,7 @@ namespace OpenUtau.App.Controls {
         private UVoicePart? part;
         private bool showPitch = true;
         private bool showFinalPitch = true;
+        private bool showReferencePitch = true;
         private bool showVibrato = true;
         private bool showPhonemizerTags = true;
         private bool showPlaybackNoteHighlight;
@@ -408,7 +418,7 @@ namespace OpenUtau.App.Controls {
                     }
                     RenderNoteBody(note, viewModel, context);
                 }
-                if (!hidePitch) {
+                if (ShowReferencePitch && !hidePitch) {
                     RenderReferencePitch(leftTick, rightTick, viewModel, context);
                 }
                 if (ShowFinalPitch && !hidePitch) {
