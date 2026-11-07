@@ -1,0 +1,8 @@
+<Project>
+  <!-- Machine-local build settings (for example, sending OpenUtau's output to a
+       directory next to the runtime data) live in local.build.props, which each
+       developer creates themselves and git ignores. CI has no such file, so its
+       build is unchanged. -->
+  <Import Project="$(MSBuildThisFileDirectory)local.build.props"
+          Condition="Exists('$(MSBuildThisFileDirectory)local.build.props')" />
+</Project>
