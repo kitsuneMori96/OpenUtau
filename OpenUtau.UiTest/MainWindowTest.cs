@@ -33,6 +33,9 @@ namespace OpenUtau.UiTest {
                 return;
             }
             coreInitialized = true;
+            // Tests look up labels and node titles in English; don't inherit the machine's UI language.
+            Preferences.Default.Language = "en-US";
+            OpenUtau.App.App.SetLanguage("en-US");
             UpdaterDialog.CheckForUpdateEnabled = false;
             ToolsManager.Inst.Initialize();
             SingerManager.Inst.Initialize();
