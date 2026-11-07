@@ -342,5 +342,7 @@ appcast.*.xml
 Microsoft.AI.DirectML
 tmp/
 
-# Per-developer MSBuild settings, imported by Directory.Build.props when present.
+# Per-developer MSBuild settings, imported by Directory.Build.props when present,
+# and the matching deploy script.
 local.build.props
+local.deploy.ps1
