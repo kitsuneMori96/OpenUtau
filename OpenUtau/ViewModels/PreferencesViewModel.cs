@@ -115,6 +115,7 @@ namespace OpenUtau.App.ViewModels {
         [Reactive] public partial bool UseUiFontForNotes { get; set; }
         public List<string>  UiFontFamilies { get; private set; } = new();
         [Reactive] public partial int DegreeStyle { get; set; }
+        [Reactive] public partial int WheelScrollDirection { get; set; }
         [Reactive] public partial bool UseTrackColor { get; set; }
         [Reactive] public partial bool ShowPortrait { get; set; }
         [Reactive] public partial bool ShowIcon { get; set; }
@@ -240,6 +241,7 @@ namespace OpenUtau.App.ViewModels {
             UseUiFontForNotes = Preferences.Default.UseUiFontForNotes;
             RefreshUiFontFamilies();
             DegreeStyle = Preferences.Default.DegreeStyle;
+            WheelScrollDirection = Preferences.Default.WheelScrollDirection;
             UseTrackColor = Preferences.Default.UseTrackColor;
             ShowPortrait = Preferences.Default.ShowPortrait;
             ShowIcon = Preferences.Default.ShowIcon;
@@ -306,6 +308,8 @@ namespace OpenUtau.App.ViewModels {
                 index => Preferences.Default.AudioBackEnd = index);
             PersistOn(this.WhenAnyValue(vm => vm.ReduceAnimations),
                 reduceAnimations => Preferences.Default.ReduceAnimations = reduceAnimations);
+            PersistOn(this.WhenAnyValue(vm => vm.WheelScrollDirection),
+                direction => Preferences.Default.WheelScrollDirection = direction);
             PersistOn(this.WhenAnyValue(vm => vm.PlaybackAutoScroll),
                 autoScroll => Preferences.Default.PlaybackAutoScroll = autoScroll);
             PersistOn(this.WhenAnyValue(vm => vm.PlayPosMarkerMargin),

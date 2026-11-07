@@ -1221,7 +1221,7 @@ namespace OpenUtau.App.Controls {
             var size = control.Bounds.Size;
             var delta = args.Delta;
             if (args.KeyModifiers == KeyModifiers.None || args.KeyModifiers == KeyModifiers.Shift) {
-                if (args.KeyModifiers == KeyModifiers.Shift) {
+                if ((args.KeyModifiers == KeyModifiers.Shift) != (Preferences.Default.WheelScrollDirection == 1)) {
                     delta = new Vector(delta.Y, delta.X);
                 }
                 if (delta.X != 0) {

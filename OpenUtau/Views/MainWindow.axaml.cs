@@ -1486,7 +1486,7 @@ namespace OpenUtau.App.Views {
         public void MainPagePointerWheelChanged(object sender, PointerWheelEventArgs args) {
             var delta = args.Delta;
             if (args.KeyModifiers == KeyModifiers.None || args.KeyModifiers == KeyModifiers.Shift) {
-                if (args.KeyModifiers == KeyModifiers.Shift) {
+                if ((args.KeyModifiers == KeyModifiers.Shift) != (Preferences.Default.WheelScrollDirection == 1)) {
                     delta = new Vector(delta.Y, delta.X);
                 }
                 if (delta.X != 0) {

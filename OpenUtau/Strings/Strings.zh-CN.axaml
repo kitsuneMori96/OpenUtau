@@ -798,6 +798,10 @@ OpenUtau 是一个开源项目, 旨在为 UTAU 用户社区提供现代的用户
   <system:String x:Key="prefs.channel.stable">稳定版</system:String>
   <!--<system:String x:Key="prefs.diffsinger">DiffSinger</system:String>-->
   <system:String x:Key="prefs.editing">编辑</system:String>
+  <system:String x:Key="prefs.editing.wheelscroll">鼠标滚轮默认方向</system:String>
+  <system:String x:Key="prefs.editing.wheelscroll.horizontal">水平</system:String>
+  <system:String x:Key="prefs.editing.wheelscroll.vertical">垂直</system:String>
+  <system:String x:Key="prefs.editing.wheelscroll.hint">作用于钢琴窗和音轨视图。按住 Shift 可向另一方向滚动。</system:String>
   <system:String x:Key="prefs.general">通用</system:String>
   <system:String x:Key="prefs.note.restart">注意: 修改本项后请重启OpenUtau</system:String>
   <system:String x:Key="prefs.otoeditor">oto设定编辑器</system:String>

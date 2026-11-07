@@ -228,6 +228,8 @@ namespace OpenUtau.Core.Util {
             public int MetronomeLowFrequency = 1320;
             public int LockStartTime = 0;
             public int PlaybackAutoScroll = 2;
+            /// <summary>Default wheel axis in the editors: 0 = vertical, 1 = horizontal. Shift swaps it.</summary>
+            public int WheelScrollDirection = 0;
             public bool ReverseLogOrder = true;
             public bool ShowPortrait = true;
             public bool ShowIcon = true;
